@@ -41,36 +41,14 @@ async function main() {
 			tag != null &&
 			!already_fetched_artists.has(scrobble.artist)
 		) {
-			console.warn('# Fetching tags for artist: ', scrobble.artist)
-			const tags = await fetch(
-				`https://ws.audioscrobbler.com/2.0/?method=artist.gettoptags&artist=${scrobble.artist}&api_key=a014e53e73aba0fde3d38f1c5ec3c12b&format=json`
-			)
-				.then(async (r) => {
-					const json = await r.json()
-					if (json.error) throw json
-					return json.toptags.tag
-				})
-				.catch((reason) => {
-					console.error('FAILED TO GET TAG FOR ARTIST: ' + scrobble.artist)
-					console.error('reason: ', JSON.stringify(reason))
-					return []
-				})
-
-			for (let tag_i = 0; tag_i < tags.length; tag_i++) {
-				tag = tags[tag_i].name
-				if (!IGNORED_TAGS.includes(tag)) break
-			}
-
-			already_fetched_artists.add(scrobble.artist)
+			tag = await fetchScrobbleArtistTag(scrobble)
 			console.warn(tag)
-			if (tag && (tag.toLowerCase() === 'hip hop' || tag.toLowerCase() === 'rap')) tag = 'Hip-Hop'
-			if (tag && tag.toLowerCase() === '8-bit') tag = 'chiptune'
+			already_fetched_artists.add(scrobble.artist)
 			tag_per_artist.set(scrobble.artist, tag)
 			export_tag_per_artist(tag_per_artist)
 		}
 
-		if (tag && (tag.toLowerCase() === 'hip hop' || tag.toLowerCase() === 'rap')) tag = 'Hip-Hop'
-		if (tag && tag.toLowerCase() === '8-bit') tag = 'chiptune'
+		tag = normalizeTag(tag)
 
 		if (IGNORED_TAGS.includes(tag)) continue
 
@@ -125,3 +103,33 @@ async function main() {
 }
 
 main()
+
+/** @param {string} tag */
+function normalizeTag(tag) {
+	if (tag && (tag.toLowerCase() === 'hip hop' || tag.toLowerCase() === 'rap')) tag = 'Hip-Hop'
+	if (tag && tag.toLowerCase() === '8-bit') tag = 'chiptune'
+	return tag
+}
+
+/** @returns {Promise<string|undefined>} */
+async function fetchScrobbleArtistTag(scrobble) {
+	console.warn('# Fetching tags for artist: ', scrobble.artist)
+	const tagsData = await fetch(
+		`https://ws.audioscrobbler.com/2.0/?method=artist.gettoptags&artist=${scrobble.artist}&api_key=a014e53e73aba0fde3d38f1c5ec3c12b&format=json`
+	)
+		.then(async (r) => {
+			const json = await r.json()
+			if (json.error) throw json
+			return json.toptags.tag
+		})
+		.catch((reason) => {
+			console.error('FAILED TO GET TAG FOR ARTIST: ' + scrobble.artist)
+			console.error('reason: ', JSON.stringify(reason))
+			return []
+		})
+	for (const tagData of tagsData) {
+		const tag = tagData.name
+		if (IGNORED_TAGS.includes(tag)) continue
+		return tag
+	}
+}
