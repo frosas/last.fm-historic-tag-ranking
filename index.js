@@ -1,13 +1,10 @@
-import { dirname } from 'node:path'
-import { fileURLToPath } from 'node:url'
 import { ArtistTagService } from './src/ArtistTagService/ArtistTagService.js'
 import { import_scrobbles } from './import.js'
+import { __dirname } from './src/__dirname.js'
 
 // configuration
 const SCROBBLES_CSV = './recenttracks-r00z-1701781243.csv'
 const NUMBER_TOP_TAGS = 30
-
-const __dirname = dirname(fileURLToPath(import.meta.url))
 
 async function main() {
 	console.warn('importing local data')
