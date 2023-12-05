@@ -33,8 +33,7 @@ async function main() {
 	const tag_count_per_year = {}
 
 	console.warn('searching tags')
-	for (let i = 0; i < scrobbles.length; i++) {
-		const scrobble = scrobbles[i]
+	for (const scrobble of scrobbles) {
 		let tag = tag_per_artist.get(scrobble.artist)
 		if (
 			FETCH_TAGS &&
