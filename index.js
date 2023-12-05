@@ -1,56 +1,27 @@
-import { export_tag_per_artist, import_scrobbles, import_tag_per_artist } from './import.js'
+import { dirname } from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { ArtistTagService } from './src/ArtistTagService/ArtistTagService.js'
+import { import_scrobbles } from './import.js'
 
 // configuration
 const SCROBBLES_CSV = './recenttracks-r00z-1701781243.csv'
 const NUMBER_TOP_TAGS = 30
-const FETCH_TAGS = true
-const IGNORED_TAGS = [
-	null,
-	undefined,
-	'seen live',
-	'musik um sich allein zu betrinken',
-	'dank',
-	'boy der am block chillt',
-	'horses and ponies and unicorns too',
-	'countries and continents',
-	'favorites',
-	'female vocalists',
-	'Deutschrap',
-	'angeschwollene Eier',
-	'french',
-	'Norway',
-	'haiti',
-	'belgian',
-]
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 async function main() {
 	console.warn('importing local data')
 	const scrobbles = await import_scrobbles(SCROBBLES_CSV)
-	const tag_per_artist = import_tag_per_artist()
-
-	const already_fetched_artists = new Set()
+	const cachePath = `${__dirname}/../tag_per_artist.json`
+	const artistTagService = new ArtistTagService({ cachePath })
 
 	const tag_count_per_year = {}
 
 	console.warn('searching tags')
 	for (const scrobble of scrobbles) {
-		let tag = tag_per_artist.get(scrobble.artist)
-		if (
-			FETCH_TAGS &&
-			(!tag || IGNORED_TAGS.includes(tag)) &&
-			tag != null &&
-			!already_fetched_artists.has(scrobble.artist)
-		) {
-			tag = await fetchScrobbleArtistTag(scrobble)
-			console.warn(tag)
-			already_fetched_artists.add(scrobble.artist)
-			tag_per_artist.set(scrobble.artist, tag)
-			export_tag_per_artist(tag_per_artist)
-		}
+		const tag = await artistTagService.getArtistTag(scrobble.artist)
 
-		tag = normalizeTag(tag)
-
-		if (IGNORED_TAGS.includes(tag)) continue
+		if (!tag) continue
 
 		if (!tag_count_per_year[scrobble.year]) tag_count_per_year[scrobble.year] = []
 		let tag_in_year = tag_count_per_year[scrobble.year].find((i) => i.tag === tag)
@@ -103,33 +74,3 @@ async function main() {
 }
 
 main()
-
-/** @param {string} tag */
-function normalizeTag(tag) {
-	if (tag && (tag.toLowerCase() === 'hip hop' || tag.toLowerCase() === 'rap')) tag = 'Hip-Hop'
-	if (tag && tag.toLowerCase() === '8-bit') tag = 'chiptune'
-	return tag
-}
-
-/** @returns {Promise<string|undefined>} */
-async function fetchScrobbleArtistTag(scrobble) {
-	console.warn('# Fetching tags for artist: ', scrobble.artist)
-	const tagsData = await fetch(
-		`https://ws.audioscrobbler.com/2.0/?method=artist.gettoptags&artist=${scrobble.artist}&api_key=a014e53e73aba0fde3d38f1c5ec3c12b&format=json`
-	)
-		.then(async (r) => {
-			const json = await r.json()
-			if (json.error) throw json
-			return json.toptags.tag
-		})
-		.catch((reason) => {
-			console.error('FAILED TO GET TAG FOR ARTIST: ' + scrobble.artist)
-			console.error('reason: ', JSON.stringify(reason))
-			return []
-		})
-	for (const tagData of tagsData) {
-		const tag = tagData.name
-		if (IGNORED_TAGS.includes(tag)) continue
-		return tag
-	}
-}
