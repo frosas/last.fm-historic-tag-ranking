@@ -1,16 +1,18 @@
 import { ArtistTagService } from './src/ArtistTagService/ArtistTagService.js'
 import { import_scrobbles } from './import.js'
-import { __dirname } from './src/__dirname.js'
+import { getImportDirname } from './src/__dirname.js'
+
+const __dirname = getImportDirname(import.meta)
 
 // configuration
 const SCROBBLES_CSV = './recenttracks-r00z-1701781243.csv'
 const NUMBER_TOP_TAGS = 30
+const artistsTagsCachePath = `${__dirname}/artists-tags-cache.json`
 
 async function main() {
 	console.warn('importing local data')
 	const scrobbles = await import_scrobbles(SCROBBLES_CSV)
-	const cachePath = `${__dirname}/../tag_per_artist.json`
-	const artistTagService = new ArtistTagService({ cachePath })
+	const artistTagService = new ArtistTagService({ cachePath: artistsTagsCachePath })
 
 	const tag_count_per_year = {}
 
