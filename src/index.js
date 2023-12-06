@@ -60,7 +60,7 @@ async function main() {
 		})
 	}
 
-	console.warn('printing ranking')
+	console.warn('building ranking')
 	const rows = []
 	const headerRow = ['tag']
 	for (const year of [...year_set]) headerRow.push(year)
@@ -82,7 +82,7 @@ async function main() {
 		}
 		rows.push(row)
 	}
-	writeFileSync('out.csv', buildCsv(rows))
+	writeFileSync('ranking.csv', buildCsv(rows))
 }
 
 main()
