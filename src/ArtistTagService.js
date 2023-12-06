@@ -1,6 +1,6 @@
 /**
  * @typedef {import('./LastFm.js').LastFm} LastFm
- * @typedef {import('./ArtistsTagsCache.js').ArtistsTagsCache} ArtistsTagsCache
+ * @typedef {import('./ArtistTagCache.js').ArtistTagCache} ArtistTagCache
  */
 
 // TODO Use an allowed list instead of an ignored list?
@@ -74,7 +74,7 @@ const ignoredTags = [
 export class ArtistTagService {
 	/**
 	 * @param {object} params
-	 * @param {ArtistsTagsCache} params.cache
+	 * @param {ArtistTagCache} params.cache
 	 * @param {LastFm} params.lastFm
 	 */
 	constructor({ cache, lastFm }) {

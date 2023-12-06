@@ -1,6 +1,6 @@
 import fs from 'node:fs'
 
-export class ArtistsTagsCache {
+export class ArtistTagCache {
 	#path
 	#tags
 
