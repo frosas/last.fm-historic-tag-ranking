@@ -1,6 +1,7 @@
 import { ArtistTagService } from './src/ArtistTagService/ArtistTagService.js'
 import { import_scrobbles } from './import.js'
 import { getImportDirname } from './src/__dirname.js'
+import { LastFm } from './src/LastFm.js'
 
 const __dirname = getImportDirname(import.meta)
 
@@ -8,17 +9,22 @@ const __dirname = getImportDirname(import.meta)
 const SCROBBLES_CSV = './recenttracks-r00z-1701781243.csv'
 const NUMBER_TOP_TAGS = 30
 const artistsTagsCachePath = `${__dirname}/artists-tags-cache.json`
+const lastFmApiKey = `a014e53e73aba0fde3d38f1c5ec3c12b`
 
 async function main() {
 	console.warn('importing local data')
 	const scrobbles = await import_scrobbles(SCROBBLES_CSV)
-	const artistTagService = new ArtistTagService({ cachePath: artistsTagsCachePath })
+	const lastFm = new LastFm({ apiKey: lastFmApiKey })
+	const artistTagService = new ArtistTagService({ cachePath: artistsTagsCachePath, lastFm })
 
 	const tag_count_per_year = {}
 
 	console.warn('searching tags')
 	for (const scrobble of scrobbles) {
-		const tag = await artistTagService.getArtistTag(scrobble.artist)
+		const tag = await artistTagService.getArtistTag(scrobble.artist).catch((reason) => {
+			console.error(`❗️ Could not get the tag for ${scrobble.artist}: ${JSON.stringify(reason)}}`)
+			return undefined
+		})
 
 		if (!tag) continue
 
