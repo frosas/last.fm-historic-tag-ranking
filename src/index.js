@@ -2,6 +2,7 @@ import { ArtistTagService } from './ArtistTagService/ArtistTagService.js'
 import { loadScrobbles } from './importScrobbles.js'
 import { LastFm } from './LastFm.js'
 import { ArtistsTagsCache } from './ArtistTagService/ArtistsTagsCache.js'
+import { buildStats } from './buildStats.js'
 
 const basePath = new URL('..', import.meta.url).pathname
 
@@ -37,6 +38,9 @@ async function main() {
 		}
 		tag_in_year.count++
 	}
+
+	console.warn('building stats')
+	buildStats({ artistsTags: artistsTagsCache.allTags })
 
 	console.warn('getting top tags')
 	for (const array of Object.values(tag_count_per_year)) {
@@ -75,6 +79,7 @@ async function main() {
 				row.push(index + 1)
 			}
 		}
+		// TODO Write directly to a file
 		console.log(row.map((v) => `"${v}"`).join(','))
 	}
 }

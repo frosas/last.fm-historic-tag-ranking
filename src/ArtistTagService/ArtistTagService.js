@@ -48,7 +48,7 @@ export class ArtistTagService {
 	 * @returns {Promise<string | undefined>} The artist main tag or undefined if they has no tag
 	 */
 	async getArtistTag(artist) {
-		const cachedTag = this.cache.get(artist)
+		const cachedTag = this.cache.getArtistTag(artist)
 		const isTagCached = cachedTag !== undefined
 		/**
 		 * We want to retry fetching/saving the tag if it's in the ignored list as it means it's a newly
@@ -60,7 +60,7 @@ export class ArtistTagService {
 		const tags = await this.lastFm.getArtistTopTags(artist)
 		const tag = tags.find((tag) => !ignoredTags.includes(tag))
 		console.warn('Tag:', tag)
-		this.cache.set(artist, tag ?? null)
+		this.cache.setArtistTag(artist, tag ?? null)
 		return tag
 	}
 }

@@ -1,1 +1,4 @@
 node_modules
+/scrobbles.csv
+/out.csv
+/stats.json
