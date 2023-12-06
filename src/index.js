@@ -2,7 +2,7 @@ import { writeFileSync } from 'fs'
 import { ArtistTagService } from './ArtistTagService.js'
 import { loadScrobbles } from './importScrobbles.js'
 import { LastFm } from './LastFm.js'
-import { ArtistTagCache } from './ArtistTagCache.js'
+import { ArtistTagsCache } from './ArtistTagsCache.js'
 import { buildStats } from './buildStats.js'
 import { buildCsv } from './buildCsv.js'
 
@@ -17,9 +17,9 @@ const lastFmApiKey = `a014e53e73aba0fde3d38f1c5ec3c12b`
 async function main() {
 	console.warn('importing local data')
 	const scrobbles = await loadScrobbles(scrobblesPath)
-	const artistTagCache = new ArtistTagCache({ path: artistsTagsCachePath })
+	const artistTagsCache = new ArtistTagsCache({ path: artistsTagsCachePath })
 	const lastFm = new LastFm({ apiKey: lastFmApiKey })
-	const artistTagService = new ArtistTagService({ cache: artistTagCache, lastFm })
+	const artistTagService = new ArtistTagService({ cache: artistTagsCache, lastFm })
 
 	const tag_count_per_year = {}
 
@@ -42,7 +42,7 @@ async function main() {
 	}
 
 	console.warn('building stats')
-	buildStats({ artistsTags: artistTagCache.allTags })
+	buildStats({ artistsTags: artistTagService.artistsTags })
 
 	console.warn('getting top tags')
 	for (const array of Object.values(tag_count_per_year)) {

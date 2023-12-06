@@ -1,6 +1,6 @@
 /**
  * @typedef {import('./LastFm.js').LastFm} LastFm
- * @typedef {import('./ArtistTagCache.js').ArtistTagCache} ArtistTagCache
+ * @typedef {import('./ArtistTagsCache.js').ArtistTagsCache} ArtistTagsCache
  */
 
 // TODO Use an allowed list instead of an ignored list?
@@ -74,7 +74,7 @@ const ignoredTags = [
 export class ArtistTagService {
 	/**
 	 * @param {object} params
-	 * @param {ArtistTagCache} params.cache
+	 * @param {ArtistTagsCache} params.cache
 	 * @param {LastFm} params.lastFm
 	 */
 	constructor({ cache, lastFm }) {
@@ -86,6 +86,7 @@ export class ArtistTagService {
 	 * @param {string} artist
 	 * @returns {Promise<string | undefined>} The artist main tag or undefined if they has no tag
 	 */
+	// TODO getArtistTopTag
 	async getArtistTag(artist) {
 		const cachedTag = this.cache.getArtistTag(artist)
 		const isTagCached = cachedTag !== undefined
@@ -102,5 +103,9 @@ export class ArtistTagService {
 		console.warn('Tag:', tag)
 		this.cache.setArtistTag(artist, tag ?? null)
 		return tag
+	}
+
+	get artistsTags() {
+		return this.cache.allTags
 	}
 }
