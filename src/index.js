@@ -4,7 +4,7 @@ import { loadScrobbles } from './importScrobbles.js'
 import { LastFm } from './LastFm.js'
 import { ArtistTagCache } from './ArtistTagCache.js'
 import { buildStats } from './buildStats.js'
-import { buildCsv } from './csv.js'
+import { buildCsv } from './buildCsv.js'
 
 const basePath = new URL('..', import.meta.url).pathname
 
