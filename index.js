@@ -2,6 +2,7 @@ import { ArtistTagService } from './src/ArtistTagService/ArtistTagService.js'
 import { import_scrobbles } from './import.js'
 import { getImportDirname } from './src/getImportDirname.js'
 import { LastFm } from './src/LastFm.js'
+import { ArtistsTagsCache } from './src/ArtistTagService/ArtistsTagsCache.js'
 
 const __dirname = getImportDirname(import.meta)
 
@@ -14,8 +15,9 @@ const lastFmApiKey = `a014e53e73aba0fde3d38f1c5ec3c12b`
 async function main() {
 	console.warn('importing local data')
 	const scrobbles = await import_scrobbles(SCROBBLES_CSV)
+	const artistsTagsCache = new ArtistsTagsCache({ path: artistsTagsCachePath })
 	const lastFm = new LastFm({ apiKey: lastFmApiKey })
-	const artistTagService = new ArtistTagService({ cachePath: artistsTagsCachePath, lastFm })
+	const artistTagService = new ArtistTagService({ cache: artistsTagsCache, lastFm })
 
 	const tag_count_per_year = {}
 

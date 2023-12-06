@@ -1,7 +1,6 @@
-import { ArtistsTagsCache } from './ArtistsTagsCache.js'
-
 /**
  * @typedef {import('../LastFm.js').LastFm} LastFm
+ * @typedef {import('./ArtistsTagsCache.js').ArtistsTagsCache} ArtistsTagsCache
  */
 
 const ignoredTags = [
@@ -34,11 +33,11 @@ const ignoredTags = [
 export class ArtistTagService {
 	/**
 	 * @param {object} params
-	 * @param {string} params.cachePath
+	 * @param {ArtistsTagsCache} params.cache
 	 * @param {LastFm} params.lastFm
 	 */
-	constructor({ cachePath, lastFm }) {
-		this.cache = new ArtistsTagsCache({ path: cachePath })
+	constructor({ cache, lastFm }) {
+		this.cache = cache
 		this.lastFm = lastFm
 	}
 
