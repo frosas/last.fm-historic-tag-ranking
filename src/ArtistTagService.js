@@ -97,6 +97,7 @@ export class ArtistTagService {
 		if (isTagCached && !isCachedTagIgnored) return cachedTag ?? undefined
 		console.warn('Fetching tag for artist:', artist)
 		const tags = await this.lastFm.getArtistTopTags(artist)
+		// TODO Convert too-specific tags to more general tags (eg, 'hard rock' -> 'rock')
 		const tag = tags.find((tag) => !ignoredTags.includes(tag))
 		console.warn('Tag:', tag)
 		this.cache.setArtistTag(artist, tag ?? null)
