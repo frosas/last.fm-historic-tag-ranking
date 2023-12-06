@@ -1,6 +1,6 @@
 import { ArtistTagService } from './src/ArtistTagService/ArtistTagService.js'
 import { import_scrobbles } from './import.js'
-import { getImportDirname } from './src/__dirname.js'
+import { getImportDirname } from './src/getImportDirname.js'
 import { LastFm } from './src/LastFm.js'
 
 const __dirname = getImportDirname(import.meta)
