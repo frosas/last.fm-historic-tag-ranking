@@ -12,9 +12,13 @@ export class LastFm {
 	 * @returns {Promise<string[]>} The artist top tags, sorted by popularity
 	 */
 	async getArtistTopTags(artist) {
-		// TODO Encode params
 		const res = await fetch(
-			`https://ws.audioscrobbler.com/2.0/?method=artist.gettoptags&artist=${artist}&api_key=${this.apiKey}&format=json`
+			`https://ws.audioscrobbler.com/2.0/?${new URLSearchParams({
+				method: 'artist.gettoptags',
+				artist,
+				api_key: this.apiKey,
+				format: 'json',
+			})}`
 		)
 		const data = await res.json()
 		if (data.error) throw data
