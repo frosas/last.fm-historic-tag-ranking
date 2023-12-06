@@ -1,8 +1,10 @@
+import { writeFileSync } from 'fs'
 import { ArtistTagService } from './ArtistTagService/ArtistTagService.js'
 import { loadScrobbles } from './importScrobbles.js'
 import { LastFm } from './LastFm.js'
 import { ArtistsTagsCache } from './ArtistTagService/ArtistsTagsCache.js'
 import { buildStats } from './buildStats.js'
+import { buildCsv } from './csv.js'
 
 const basePath = new URL('..', import.meta.url).pathname
 
@@ -59,11 +61,10 @@ async function main() {
 	}
 
 	console.warn('printing ranking')
-	const first_row = ['tag']
-	for (const year of [...year_set]) {
-		first_row.push(year)
-	}
-	console.log(first_row.map((v) => `"${v}"`).join(','))
+	const rows = []
+	const headerRow = ['tag']
+	for (const year of [...year_set]) headerRow.push(year)
+	rows.push(headerRow)
 	for (const tag of [...tag_set]) {
 		const row = [
 			tag
@@ -79,9 +80,9 @@ async function main() {
 				row.push(index + 1)
 			}
 		}
-		// TODO Write directly to a file
-		console.log(row.map((v) => `"${v}"`).join(','))
+		rows.push(row)
 	}
+	writeFileSync('out.csv', buildCsv(rows))
 }
 
 main()

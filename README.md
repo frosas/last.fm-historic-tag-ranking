@@ -16,7 +16,7 @@ PREREQUISITE: You need to have [Node.JS](https://nodejs.org/) installed on your 
 1. export a CSV of all your scrobbles from https://mainstream.ghan.nl/export.html and put it somewhere in this folder
 1. update the `SCROBBLES_CSV` variable inside `index.js` to match your downloaded filename
 1. run `npm install`
-1. run `npm start -s > out.csv` to get your tag ranking
+1. run `npm start` to get your tag ranking
 
 ## visualizing the data with Datawrapper
 

@@ -3,7 +3,7 @@
 	"name": "lastfm",
 	"version": "1.0.0",
 	"scripts": {
-		"start": "node src/index.js"
+		"start": "node src"
 	},
 	"keywords": [],
 	"author": "",
