@@ -1,5 +1,5 @@
 /**
- * @typedef {import('../LastFm.js').LastFm} LastFm
+ * @typedef {import('./LastFm.js').LastFm} LastFm
  * @typedef {import('./ArtistsTagsCache.js').ArtistsTagsCache} ArtistsTagsCache
  */
 
