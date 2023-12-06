@@ -1,14 +1,14 @@
-// TODO Move to src
+import { ArtistTagService } from './ArtistTagService/ArtistTagService.js'
+import { loadScrobbles } from './importScrobbles.js'
+import { LastFm } from './LastFm.js'
+import { ArtistsTagsCache } from './ArtistTagService/ArtistsTagsCache.js'
 
-import { ArtistTagService } from './src/ArtistTagService/ArtistTagService.js'
-import { loadScrobbles } from './src/importScrobbles.js'
-import { LastFm } from './src/LastFm.js'
-import { ArtistsTagsCache } from './src/ArtistTagService/ArtistsTagsCache.js'
+const basePath = new URL('..', import.meta.url).pathname
 
 // configuration
-const scrobblesPath = './scrobbles.csv'
+const scrobblesPath = `${basePath}/scrobbles.csv`
 const NUMBER_TOP_TAGS = 30
-const artistsTagsCachePath = `./artists-tags-cache.json`
+const artistsTagsCachePath = `${basePath}/artists-tags-cache.json`
 const lastFmApiKey = `a014e53e73aba0fde3d38f1c5ec3c12b`
 
 async function main() {
