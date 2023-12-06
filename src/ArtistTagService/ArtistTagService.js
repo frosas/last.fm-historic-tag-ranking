@@ -3,6 +3,8 @@
  * @typedef {import('./ArtistsTagsCache.js').ArtistsTagsCache} ArtistsTagsCache
  */
 
+// TODO Use an allowed list instead of an ignored list?
+// TODO Don't use an ignored list at all?
 const ignoredTags = [
 	'seen live',
 	'musik um sich allein zu betrinken',

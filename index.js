@@ -1,20 +1,19 @@
+// TODO Move to src
+
 import { ArtistTagService } from './src/ArtistTagService/ArtistTagService.js'
-import { import_scrobbles } from './import.js'
-import { getImportDirname } from './src/getImportDirname.js'
+import { loadScrobbles } from './src/importScrobbles.js'
 import { LastFm } from './src/LastFm.js'
 import { ArtistsTagsCache } from './src/ArtistTagService/ArtistsTagsCache.js'
 
-const __dirname = getImportDirname(import.meta)
-
 // configuration
-const SCROBBLES_CSV = './recenttracks-r00z-1701781243.csv'
+const scrobblesPath = './scrobbles.csv'
 const NUMBER_TOP_TAGS = 30
-const artistsTagsCachePath = `${__dirname}/artists-tags-cache.json`
+const artistsTagsCachePath = `./artists-tags-cache.json`
 const lastFmApiKey = `a014e53e73aba0fde3d38f1c5ec3c12b`
 
 async function main() {
 	console.warn('importing local data')
-	const scrobbles = await import_scrobbles(SCROBBLES_CSV)
+	const scrobbles = await loadScrobbles(scrobblesPath)
 	const artistsTagsCache = new ArtistsTagsCache({ path: artistsTagsCachePath })
 	const lastFm = new LastFm({ apiKey: lastFmApiKey })
 	const artistTagService = new ArtistTagService({ cache: artistsTagsCache, lastFm })
