@@ -9,5 +9,5 @@ export function buildCsv(rows) {
  * @param {string[]} row
  */
 function buildCsvLine(row) {
-	return row.map((value) => `"${value}"`).join(', ')
+	return row.map((value) => `"${value}"`).join(',')
 }

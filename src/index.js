@@ -10,7 +10,7 @@ const basePath = new URL('..', import.meta.url).pathname
 
 // configuration
 const scrobblesPath = `${basePath}/scrobbles.csv`
-const NUMBER_TOP_TAGS = 30
+const NUMBER_TOP_TAGS = 50
 const artistsTagsCachePath = `${basePath}/artists-tags-cache.json`
 const lastFmApiKey = `a014e53e73aba0fde3d38f1c5ec3c12b`
 
