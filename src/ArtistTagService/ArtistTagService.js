@@ -19,6 +19,12 @@ export const ignoredTags = [
 	'catala',
 	'catalan',
 	'australian',
+	'Soundtrack',
+	'Espanol',
+	'japanese',
+	'swedish',
+	'spanish',
+	'british',
 ]
 
 export class ArtistTagService {
