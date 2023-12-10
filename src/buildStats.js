@@ -8,7 +8,8 @@ export function buildStats({ artistsTags }) {
 	const artistsByTag = [...artistsTags].reduce((artistsByTag, [artist, tag]) => {
 		const effectiveTag = tag ?? 'unknown'
 		const artists = [...(artistsByTag[effectiveTag] ?? []), artist]
-		return { ...artistsByTag, [effectiveTag]: artists }
+		artistsByTag[effectiveTag] = artists // Mutating for performance
+		return artistsByTag
 	}, {})
 	for (const tagArtists of Object.values(artistsByTag)) tagArtists.sort()
 	const stats = {
