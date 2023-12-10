@@ -5,12 +5,14 @@ import { writeFileSync } from 'fs'
  * @param {Map<string, string | null>} params.artistsTags
  */
 export function buildStats({ artistsTags }) {
+	/** @type {Record<string, string[]>} */
+	const initialArtistsByTag = {}
 	const artistsByTag = [...artistsTags].reduce((artistsByTag, [artist, tag]) => {
 		const effectiveTag = tag ?? 'unknown'
 		const artists = [...(artistsByTag[effectiveTag] ?? []), artist]
 		artistsByTag[effectiveTag] = artists // Mutating for performance
 		return artistsByTag
-	}, {})
+	}, initialArtistsByTag)
 	for (const tagArtists of Object.values(artistsByTag)) tagArtists.sort()
 	const stats = {
 		tags: Object.keys(artistsByTag).sort(),
