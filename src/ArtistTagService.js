@@ -82,12 +82,17 @@ export class ArtistTagService {
 		this.lastFm = lastFm
 	}
 
+	async getArtistTag(artist) {
+		const originalTag = await this.#getOriginalArtistTag(artist)
+		return this.#normalizeTag(originalTag)
+	}
+
 	/**
 	 * @param {string} artist
 	 * @returns {Promise<string | undefined>} The artist main tag or undefined if they has no tag
 	 */
 	// TODO getArtistTopTag
-	async getArtistTag(artist) {
+	async #getOriginalArtistTag(artist) {
 		const cachedTag = this.cache.getArtistTag(artist)
 		const isTagCached = cachedTag !== undefined
 		/**
@@ -103,6 +108,28 @@ export class ArtistTagService {
 		console.warn('Tag:', tag)
 		this.cache.setArtistTag(artist, tag ?? null)
 		return tag
+	}
+
+	/**
+	 * @param {string | undefined} tag
+	 */
+	#normalizeTag(tag) {
+		if (tag === undefined) return undefined
+		const normalizedTag = tag.toLocaleLowerCase()
+		// TODO Better use a more specific original tag if available (eg, 'indie rock' -> 'rock')
+		if (normalizedTag === 'indie') return 'rock'
+		if (normalizedTag.match(/rock/)) return 'rock'
+		if (normalizedTag.match(/punk/)) return 'rock'
+		if (normalizedTag.match(/metal/)) return 'rock'
+		if (normalizedTag === 'trance') return 'electronic'
+		if (normalizedTag === 'techno') return 'electronic'
+		if (normalizedTag === 'minimal') return 'electronic'
+		if (normalizedTag === 'drum and bass') return 'electronic'
+		if (normalizedTag === 'electro') return 'electronic'
+		if (normalizedTag === 'dance') return 'electronic'
+		if (normalizedTag.match(/house/)) return 'electronic'
+		if (normalizedTag.match(/pop/)) return 'pop'
+		return normalizedTag
 	}
 
 	get artistsTags() {

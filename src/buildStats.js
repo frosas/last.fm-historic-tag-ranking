@@ -13,6 +13,7 @@ export function buildStats({ artistsTags }) {
 		artistsByTag[effectiveTag] = artists // Mutating for performance
 		return artistsByTag
 	}, initialArtistsByTag)
+	// Mutation for convenience
 	for (const tagArtists of Object.values(artistsByTag)) tagArtists.sort()
 	const stats = {
 		tags: Object.keys(artistsByTag).sort(),
